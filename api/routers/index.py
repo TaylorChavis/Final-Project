@@ -1,6 +1,6 @@
-from api.routers import customerRouter, menuItemRouter, orderRouter, orderDetailRouter, inventoryRouter, paymentRouter
+from api.routers import customerRouter, menuItemRouter, orderRouter, orderDetailRouter, inventoryRouter, paymentRouter, reviewRouter
 
-from . import customerRouter, menuItemRouter, orderRouter, orderDetailRouter, inventoryRouter, paymentRouter
+from . import customerRouter, menuItemRouter, orderRouter, orderDetailRouter, inventoryRouter, paymentRouter, reviewRouter
 
 
 def load_routes(app):
@@ -10,3 +10,4 @@ def load_routes(app):
     app.include_router(orderDetailRouter.router)
     app.include_router(inventoryRouter.router)
     app.include_router(paymentRouter.router)
+    app.include_router(reviewRouter.router)
