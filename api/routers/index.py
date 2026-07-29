@@ -1,6 +1,7 @@
-from . import orders, order_details
+from api.routers import customerRouter
+
+from . import customerRouter
 
 
 def load_routes(app):
-    app.include_router(orders.router)
-    app.include_router(order_details.router)
+    app.include_router(customerRouter.router)
