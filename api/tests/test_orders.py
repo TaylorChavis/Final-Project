@@ -1,31 +1,41 @@
 from fastapi.testclient import TestClient
-from ..controllers import orders as controller
-from ..main import app
 import pytest
-from ..models import orders as model
+from ..controllers import orderController as controller
+from ..main import app
+from ..schemas import orderSchema as schema
 
-# Create a test client for the app
+
 client = TestClient(app)
 
 
 @pytest.fixture
 def db_session(mocker):
-    return mocker.Mock()
+    db = mocker.Mock()
+
+    db.query.return_value.filter.return_value.first.return_value = mocker.Mock()
+
+    return db
 
 
 def test_create_order(db_session):
-    # Create a sample order
     order_data = {
-        "customer_name": "John Doe",
-        "description": "Test order"
+        "customer_id": 1,
+        "status": "Pending",
+        "total_price": 12.50
     }
 
-    order_object = model.Order(**order_data)
+    order_object = schema.OrderCreate(**order_data)
 
-    # Call the create function
-    created_order = controller.create(db_session, order_object)
+    created_order = controller.create_order(
+        db=db_session,
+        order=order_object
+    )
 
-    # Assertions
     assert created_order is not None
-    assert created_order.customer_name == "John Doe"
-    assert created_order.description == "Test order"
+    assert created_order.customer_id == 1
+    assert created_order.status == "Pending"
+    assert created_order.total_price == 12.50
+
+    db_session.add.assert_called_once()
+    db_session.commit.assert_called_once()
+    db_session.refresh.assert_called_once()
